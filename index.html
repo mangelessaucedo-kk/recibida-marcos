@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Felicitaciones, Marcos!</title>
+  <style>
+    :root {
+      --fondo: #f6f4fb;
+      --tarjeta: #ffffff;
+      --texto: #1f1b2e;
+      --suave: #6b6680;
+      --acento: #5b3cc4;
+      --acento-texto: #ffffff;
+      --borde: #e4e0f0;
+      --ok: #1f8a4c;
+      --error: #c0392b;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+      line-height: 1.5;
+    }
+    header { text-align: center; padding: 48px 16px 32px; }
+    header h1 { font-size: clamp(2rem, 7vw, 3.5rem); margin: 0 0 8px; line-height: 1.1; }
+    header p { color: var(--suave); margin: 0; font-size: 1.1rem; }
+    main { max-width: 1000px; margin: 0 auto; padding: 0 16px 64px; display: grid; gap: 24px; }
+    section { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 16px; padding: 24px; }
+    h2 { margin: 0 0 4px; font-size: 1.4rem; }
+    .ayuda { color: var(--suave); margin: 0 0 16px; }
+    .formularios { display: grid; gap: 24px; }
+    @media (min-width: 760px) { .formularios { grid-template-columns: 1fr 1fr; } }
+    label { display: block; font-weight: 600; margin: 12px 0 6px; }
+    input[type="text"], textarea {
+      width: 100%; padding: 12px; border: 1px solid var(--borde); border-radius: 10px;
+      font: inherit; background: #fff; color: var(--texto);
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    button, .boton {
+      display: inline-block; margin-top: 16px; padding: 12px 20px; border: 0; border-radius: 10px;
+      background: var(--acento); color: var(--acento-texto); font: inherit; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    .elegir {
+      display: block; border: 2px dashed var(--borde); border-radius: 12px; padding: 24px;
+      text-align: center; cursor: pointer; color: var(--suave); font-weight: 400;
+    }
+    .elegir:hover { border-color: var(--acento); }
+    .elegir input { display: none; }
+    .aviso { margin: 12px 0 0; font-size: .95rem; }
+    .aviso.ok { color: var(--ok); }
+    .aviso.error { color: var(--error); }
+    .subidas { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+    .subidas li { font-size: .9rem; }
+    .subidas .nombre { display: flex; justify-content: space-between; gap: 8px; }
+    .subidas .nombre span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .barra { height: 6px; background: var(--borde); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+    .barra div { height: 100%; width: 0; background: var(--acento); transition: width .2s; }
+    .titulo-seccion { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 16px; }
+    .titulo-seccion .boton { margin-top: 0; padding: 8px 14px; font-size: .9rem; }
+    .muro { display: grid; gap: 12px; }
+    @media (min-width: 760px) { .muro { grid-template-columns: 1fr 1fr; } }
+    .mensaje { border: 1px solid var(--borde); border-radius: 12px; padding: 16px; }
+    .mensaje p { margin: 0 0 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .mensaje .firma { font-weight: 600; margin: 0; }
+    .mensaje .fecha { color: var(--suave); font-size: .85rem; font-weight: 400; }
+    .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+    .item {
+      position: relative; aspect-ratio: 1; border: 0; padding: 0; margin: 0; border-radius: 10px;
+      overflow: hidden; background: var(--borde); cursor: pointer;
+    }
+    .item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .item .icono {
+      position: absolute; inset: 0; display: grid; place-items: center; font-size: 2.2rem;
+      color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.6); pointer-events: none;
+    }
+    .item .procesando { color: var(--suave); text-shadow: none; font-size: .85rem; text-align: center; padding: 8px; }
+    .vacio { color: var(--suave); margin: 0; }
+    .demo {
+      background: #fff6d6; border: 1px solid #f0d77a; color: #6b5300; border-radius: 12px;
+      padding: 12px 16px; font-size: .95rem;
+    }
+    .visor {
+      position: fixed; inset: 0; background: rgba(10, 8, 20, .92); display: none;
+      flex-direction: column; align-items: center; justify-content: center; padding: 16px; z-index: 10;
+    }
+    .visor.abierto { display: flex; }
+    .visor .contenido { width: 100%; max-width: 1000px; flex: 1; display: grid; place-items: center; min-height: 0; }
+    .visor img { max-width: 100%; max-height: 80vh; border-radius: 8px; }
+    .visor iframe { width: 100%; aspect-ratio: 16 / 9; max-height: 80vh; border: 0; border-radius: 8px; }
+    .visor .pie { color: #fff; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center; padding-top: 12px; }
+    .visor .pie a { color: #fff; }
+    .visor .cerrar {
+      position: absolute; top: 12px; right: 12px; margin: 0; background: rgba(255,255,255,.15);
+      font-size: 1.4rem; line-height: 1; padding: 10px 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>¡Felicitaciones, Marcos! 🎓</h1>
+    <p>Dejale un mensaje y compartí las fotos y videos de la fiesta.</p>
+  </header>
+
+  <main>
+    <div id="avisoDemo" class="demo" hidden>
+      Vista de prueba: la página todavía no está conectada con Google Drive, así que los mensajes y fotos de abajo son de ejemplo.
+    </div>
+
+    <div class="formularios">
+      <section>
+        <h2>💌 Dejale un mensaje</h2>
+        <p class="ayuda">Va a aparecer en el muro de felicitaciones.</p>
+        <form id="formMensaje">
+          <label for="nombreMensaje">Tu nombre</label>
+          <input type="text" id="nombreMensaje" maxlength="80" required autocomplete="name">
+          <label for="textoMensaje">Tu mensaje</label>
+          <textarea id="textoMensaje" maxlength="2000" required></textarea>
+          <button type="submit">Enviar mensaje</button>
+          <p id="avisoMensaje" class="aviso" role="status"></p>
+        </form>
+      </section>
+
+      <section>
+        <h2>📸 Subí fotos y videos</h2>
+        <p class="ayuda">Podés elegir varios a la vez, directo desde tu celular.</p>
+        <form id="formArchivos">
+          <label for="nombreArchivos">Tu nombre</label>
+          <input type="text" id="nombreArchivos" maxlength="80" required autocomplete="name">
+          <label class="elegir" for="archivos">
+            <input type="file" id="archivos" accept="image/*,video/*" multiple>
+            <span id="textoElegir">Tocá acá para elegir fotos y videos</span>
+          </label>
+          <button type="submit">Subir</button>
+          <p id="avisoArchivos" class="aviso" role="status"></p>
+          <ul id="listaSubidas" class="subidas"></ul>
+        </form>
+      </section>
+    </div>
+
+    <section>
+      <div class="titulo-seccion">
+        <h2>🖼️ Fotos y videos de la fiesta</h2>
+        <a id="linkCarpeta" class="boton" href="#" target="_blank" rel="noopener" hidden>Ver carpeta en Google Drive</a>
+      </div>
+      <div id="galeria" class="galeria"></div>
+      <p id="galeriaVacia" class="vacio" hidden>Todavía no hay fotos. ¡Subí la primera!</p>
+    </section>
+
+    <section>
+      <div class="titulo-seccion">
+        <h2>🎉 Muro de felicitaciones</h2>
+      </div>
+      <div id="muro" class="muro"></div>
+      <p id="muroVacio" class="vacio" hidden>Todavía no hay mensajes. ¡Escribí el primero!</p>
+    </section>
+  </main>
+
+  <div id="visor" class="visor" role="dialog" aria-modal="true" aria-label="Foto o video">
+    <button class="cerrar" id="cerrarVisor" aria-label="Cerrar">✕</button>
+    <div class="contenido" id="contenidoVisor"></div>
+    <div class="pie">
+      <span id="autorVisor"></span>
+      <a id="linkVisor" href="#" target="_blank" rel="noopener">Abrir en Google Drive</a>
+    </div>
+  </div>
+
+  <script>
+    // ⬇️ Acá va la dirección de la "aplicación web" de Google Apps Script.
+    const API_URL = 'https://script.google.com/macros/s/AKfycbylnqgnPmQtSxUWF-snHzH1NpmemEkA-Y05oaf36XAw-M08B-IOB7u22OpJSb9SnKDqLQ/exec';
+
+    const CONECTADO = API_URL.startsWith('https://script.google.com/');
+    const TAMANIO_PARTE = 8 * 1024 * 1024; // múltiplo de 256 KB, como pide Drive
+    const $ = (id) => document.getElementById(id);
+
+    /* ---------- Comunicación con Google ---------- */
+
+    async function api(datos) {
+      const respuesta = await fetch(API_URL, { method: 'POST', body: JSON.stringify(datos) });
+      const json = await respuesta.json();
+      if (!json.ok) throw new Error(json.error || 'Algo salió mal');
+      return json;
+    }
+
+    async function cargar() {
+      if (!CONECTADO) { mostrar(DEMO); return; }
+      try {
+        const respuesta = await fetch(API_URL);
+        const json = await respuesta.json();
+        if (json.ok) mostrar(json);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    /* ---------- Mostrar mensajes y galería ---------- */
+
+    function formatearFecha(ms) {
+      if (!ms) return '';
+      return new Date(ms).toLocaleString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function mostrar(datos) {
+      const muro = $('muro');
+      muro.replaceChildren();
+      for (const m of datos.mensajes) {
+        const tarjeta = document.createElement('article');
+        tarjeta.className = 'mensaje';
+        const texto = document.createElement('p');
+        texto.textContent = m.mensaje;
+        const firma = document.createElement('p');
+        firma.className = 'firma';
+        firma.textContent = '— ' + m.nombre + ' ';
+        const fecha = document.createElement('span');
+        fecha.className = 'fecha';
+        fecha.textContent = formatearFecha(m.fecha);
+        firma.append(fecha);
+        tarjeta.append(texto, firma);
+        muro.append(tarjeta);
+      }
+      $('muroVacio').hidden = datos.mensajes.length > 0;
+
+      const galeria = $('galeria');
+      galeria.replaceChildren();
+      for (const a of datos.archivos) {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'item';
+        item.setAttribute('aria-label', (a.tipo === 'video' ? 'Video' : 'Foto') + (a.autor ? ' de ' + a.autor : ''));
+        if (a.id) {
+          const img = document.createElement('img');
+          img.loading = 'lazy';
+          img.alt = '';
+          img.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(a.id) + '&sz=w400';
+          img.onerror = () => {
+            img.remove();
+            const p = document.createElement('span');
+            p.className = 'icono procesando';
+            p.textContent = (a.tipo === 'video' ? '🎬' : '📷') + ' Procesando…';
+            item.append(p);
+          };
+          item.append(img);
+          item.addEventListener('click', () => abrirVisor(a));
+        } else {
+          const p = document.createElement('span');
+          p.className = 'icono procesando';
+          p.textContent = a.tipo === 'video' ? '🎬' : '📷';
+          item.append(p);
+        }
+        if (a.tipo === 'video') {
+          const play = document.createElement('span');
+          play.className = 'icono';
+          play.textContent = '▶';
+          item.append(play);
+        }
+        galeria.append(item);
+      }
+      $('galeriaVacia').hidden = datos.archivos.length > 0;
+
+      if (datos.carpetaUrl) {
+        $('linkCarpeta').href = datos.carpetaUrl;
+        $('linkCarpeta').hidden = false;
+      }
+    }
+
+    /* ---------- Visor de fotos y videos ---------- */
+
+    function abrirVisor(a) {
+      const contenido = $('contenidoVisor');
+      contenido.replaceChildren();
+      const id = encodeURIComponent(a.id);
+      if (a.tipo === 'video') {
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://drive.google.com/file/d/' + id + '/preview';
+        iframe.allow = 'autoplay; fullscreen';
+        iframe.allowFullscreen = true;
+        contenido.append(iframe);
+      } else {
+        const img = document.createElement('img');
+        img.src = 'https://drive.google.com/thumbnail?id=' + id + '&sz=w2000';
+        img.alt = 'Foto' + (a.autor ? ' de ' + a.autor : '');
+        contenido.append(img);
+      }
+      $('autorVisor').textContent = a.autor ? 'Subido por ' + a.autor : '';
+      $('linkVisor').href = 'https://drive.google.com/file/d/' + id + '/view';
+      $('visor').classList.add('abierto');
+    }
+
+    function cerrarVisor() {
+      $('visor').classList.remove('abierto');
+      $('contenidoVisor').replaceChildren();
+    }
+
+    $('cerrarVisor').addEventListener('click', cerrarVisor);
+    $('visor').addEventListener('click', (e) => { if (e.target.id === 'visor') cerrarVisor(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarVisor(); });
+
+    /* ---------- Recordar el nombre ---------- */
+
+    function recordarNombre(nombre) {
+      try { localStorage.setItem('nombre', nombre); } catch (e) {}
+      for (const id of ['nombreMensaje', 'nombreArchivos']) if (!$(id).value) $(id).value = nombre;
+    }
+    try {
+      const guardado = localStorage.getItem('nombre');
+      if (guardado) { $('nombreMensaje').value = guardado; $('nombreArchivos').value = guardado; }
+    } catch (e) {}
+
+    /* ---------- Enviar mensaje ---------- */
+
+    $('formMensaje').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const aviso = $('avisoMensaje');
+      const boton = e.target.querySelector('button');
+      const nombre = $('nombreMensaje').value.trim();
+      const mensaje = $('textoMensaje').value.trim();
+      if (!nombre || !mensaje) return;
+      if (!CONECTADO) { aviso.className = 'aviso error'; aviso.textContent = 'La página todavía no está conectada con Google Drive.'; return; }
+      boton.disabled = true;
+      aviso.className = 'aviso';
+      aviso.textContent = 'Enviando…';
+      try {
+        await api({ accion: 'mensaje', nombre, mensaje });
+        recordarNombre(nombre);
+        $('textoMensaje').value = '';
+        aviso.className = 'aviso ok';
+        aviso.textContent = '¡Gracias! Tu mensaje ya está en el muro.';
+        cargar();
+      } catch (err) {
+        aviso.className = 'aviso error';
+        aviso.textContent = 'No se pudo enviar: ' + err.message;
+      } finally {
+        boton.disabled = false;
+      }
+    });
+
+    /* ---------- Subir fotos y videos ---------- */
+
+    $('archivos').addEventListener('change', () => {
+      const n = $('archivos').files.length;
+      $('textoElegir').textContent = n === 0 ? 'Tocá acá para elegir fotos y videos'
+        : n === 1 ? '1 archivo elegido' : n + ' archivos elegidos';
+    });
+
+    const TIPOS_POR_EXTENSION = {
+      jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp',
+      heic: 'image/heic', heif: 'image/heif', mp4: 'video/mp4', mov: 'video/quicktime',
+      m4v: 'video/x-m4v', webm: 'video/webm', '3gp': 'video/3gpp', avi: 'video/x-msvideo',
+    };
+    function tipoDe(archivo) {
+      if (archivo.type) return archivo.type;
+      const ext = (archivo.name.split('.').pop() || '').toLowerCase();
+      return TIPOS_POR_EXTENSION[ext] || '';
+    }
+
+    function subidaDirecta(url, archivo, alAvanzar) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', url);
+        xhr.upload.onprogress = (e) => { if (e.lengthComputable) alAvanzar(e.loaded / e.total); };
+        xhr.onload = () => {
+          if (xhr.status === 200 || xhr.status === 201) {
+            try { resolve(JSON.parse(xhr.responseText).id); }
+            catch (e) { reject(new Error('Respuesta inesperada de Drive')); }
+          } else {
+            reject(new Error('Drive respondió con error ' + xhr.status));
+          }
+        };
+        // Si el navegador no puede hablar directo con Drive, usamos el plan B.
+        xhr.onerror = () => { const err = new Error('sin conexión directa'); err.planB = true; reject(err); };
+        xhr.send(archivo);
+      });
+    }
+
+    function aBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const lector = new FileReader();
+        lector.onload = () => resolve(String(lector.result).split(',')[1] || '');
+        lector.onerror = () => reject(lector.error);
+        lector.readAsDataURL(blob);
+      });
+    }
+
+    async function subidaPorPartes(url, archivo, tipo, alAvanzar) {
+      let inicio = 0;
+      let id = null;
+      while (inicio < archivo.size) {
+        const fin = Math.min(inicio + TAMANIO_PARTE, archivo.size);
+        const datos = await aBase64(archivo.slice(inicio, fin));
+        const r = await api({ accion: 'subirParte', url, inicio, total: archivo.size, tipo, datos });
+        inicio = fin;
+        alAvanzar(inicio / archivo.size);
+        if (r.terminado) id = r.id;
+      }
+      return id;
+    }
+
+    async function subirArchivo(archivo, nombre, alAvanzar) {
+      const tipo = tipoDe(archivo);
+      if (!/^(image|video)\//.test(tipo)) throw new Error('no es una foto ni un video');
+      const sesion = await api({ accion: 'iniciarSubida', nombre, archivo: archivo.name, tipo, tamanio: archivo.size });
+      let id;
+      try {
+        id = await subidaDirecta(sesion.url, archivo, alAvanzar);
+      } catch (err) {
+        if (!err.planB) throw err;
+        id = await subidaPorPartes(sesion.url, archivo, tipo, alAvanzar);
+      }
+      if (id) await api({ accion: 'terminarSubida', id });
+    }
+
+    $('formArchivos').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const aviso = $('avisoArchivos');
+      const boton = e.target.querySelector('button');
+      const nombre = $('nombreArchivos').value.trim();
+      const archivos = Array.from($('archivos').files);
+      if (!nombre) return;
+      if (archivos.length === 0) { aviso.className = 'aviso error'; aviso.textContent = 'Primero elegí al menos una foto o video.'; return; }
+      if (!CONECTADO) { aviso.className = 'aviso error'; aviso.textContent = 'La página todavía no está conectada con Google Drive.'; return; }
+
+      recordarNombre(nombre);
+      boton.disabled = true;
+      aviso.className = 'aviso';
+      aviso.textContent = 'Subiendo… no cierres la página hasta que termine.';
+      const lista = $('listaSubidas');
+      lista.replaceChildren();
+      let errores = 0;
+
+      for (const archivo of archivos) {
+        const li = document.createElement('li');
+        const fila = document.createElement('div');
+        fila.className = 'nombre';
+        const titulo = document.createElement('span');
+        titulo.textContent = archivo.name;
+        const estado = document.createElement('span');
+        estado.textContent = 'En espera';
+        fila.append(titulo, estado);
+        const barra = document.createElement('div');
+        barra.className = 'barra';
+        const relleno = document.createElement('div');
+        barra.append(relleno);
+        li.append(fila, barra);
+        lista.append(li);
+      }
+
+      for (let i = 0; i < archivos.length; i++) {
+        const li = lista.children[i];
+        const estado = li.querySelector('.nombre span:last-child');
+        const relleno = li.querySelector('.barra div');
+        estado.textContent = '0%';
+        try {
+          await subirArchivo(archivos[i], nombre, (p) => {
+            relleno.style.width = Math.round(p * 100) + '%';
+            estado.textContent = Math.round(p * 100) + '%';
+          });
+          relleno.style.width = '100%';
+          estado.textContent = '✓ Listo';
+        } catch (err) {
+          errores++;
+          relleno.style.background = 'var(--error)';
+          estado.textContent = '✗ ' + err.message;
+        }
+      }
+
+      boton.disabled = false;
+      $('archivos').value = '';
+      $('textoElegir').textContent = 'Tocá acá para elegir fotos y videos';
+      if (errores === 0) {
+        aviso.className = 'aviso ok';
+        aviso.textContent = '¡Gracias! Ya está todo subido.';
+      } else {
+        aviso.className = 'aviso error';
+        aviso.textContent = errores === archivos.length ? 'No se pudo subir. Probá de nuevo.' : 'Algunos archivos no se pudieron subir. Probá de nuevo con esos.';
+      }
+      cargar();
+    });
+
+    /* ---------- Datos de ejemplo (solo sin conexión) ---------- */
+
+    const DEMO = {
+      mensajes: [
+        { nombre: 'Mamá', mensaje: '¡Estamos tan orgullosos de vos! Te lo merecés todo. 💙', fecha: Date.now() - 3600000 },
+        { nombre: 'Juli', mensaje: '¡Por fin recibido! Ahora a festejar como corresponde 🎉', fecha: Date.now() - 7200000 },
+        { nombre: 'Los chicos del fútbol', mensaje: 'Felicitaciones crack, el próximo asado lo pagás vos.', fecha: Date.now() - 9000000 },
+      ],
+      archivos: [
+        { id: null, tipo: 'foto' }, { id: null, tipo: 'foto' }, { id: null, tipo: 'video' },
+        { id: null, tipo: 'foto' }, { id: null, tipo: 'foto' },
+      ],
+    };
+
+    $('avisoDemo').hidden = CONECTADO;
+    cargar();
+    if (CONECTADO) setInterval(cargar, 60000);
+  </script>
+</body>
+</html>
