@@ -3,166 +3,328 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>¡Felicitaciones, Marcos!</title>
+  <title>¡Marcos se recibió!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   <style>
     :root {
-      --fondo: #f6f4fb;
-      --tarjeta: #ffffff;
-      --texto: #1f1b2e;
-      --suave: #6b6680;
-      --acento: #5b3cc4;
-      --acento-texto: #ffffff;
-      --borde: #e4e0f0;
-      --ok: #1f8a4c;
-      --error: #c0392b;
+      --noche: #0b1129;
+      --noche-2: #111a3d;
+      --caja: #16204b;
+      --caja-borde: #2b3a78;
+      --campo: #1d2a5c;
+      --texto: #f3f6ff;
+      --suave: #aeb9dc;
+      --rojo-sl: #e0242f;
+      --celeste: #6ec6ee;
+      --azul-sl: #1d2a6e;
+      --tinta: #050817;
+      --ok: #7dffa8;
+      --error: #ff7b7b;
     }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: var(--fondo);
+      font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-weight: 600;
       color: var(--texto);
       line-height: 1.5;
+      background-color: var(--noche);
+      background-image:
+        radial-gradient(rgba(255,255,255,.55) 1px, transparent 1.5px),
+        radial-gradient(rgba(255,255,255,.3) 1px, transparent 1.5px),
+        linear-gradient(var(--noche) 0%, var(--noche-2) 100%);
+      background-size: 110px 110px, 170px 170px, 100% 100%;
+      background-position: 0 0, 55px 80px, 0 0;
+      background-attachment: fixed;
+      min-height: 100vh;
     }
-    header { text-align: center; padding: 48px 16px 32px; }
-    header h1 { font-size: clamp(2rem, 7vw, 3.5rem); margin: 0 0 8px; line-height: 1.1; }
-    header p { color: var(--suave); margin: 0; font-size: 1.1rem; }
-    main { max-width: 1000px; margin: 0 auto; padding: 0 16px 64px; display: grid; gap: 24px; }
-    section { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 16px; padding: 24px; }
-    h2 { margin: 0 0 4px; font-size: 1.4rem; }
-    .ayuda { color: var(--suave); margin: 0 0 16px; }
-    .formularios { display: grid; gap: 24px; }
-    @media (min-width: 760px) { .formularios { grid-template-columns: 1fr 1fr; } }
-    label { display: block; font-weight: 600; margin: 12px 0 6px; }
-    input[type="text"], textarea {
-      width: 100%; padding: 12px; border: 1px solid var(--borde); border-radius: 10px;
-      font: inherit; background: #fff; color: var(--texto);
+    .pixel { font-family: "VT323", monospace; font-weight: 400; }
+    button { font: inherit; color: inherit; }
+
+    /* ---------- Barra de arriba ---------- */
+    .barra-top {
+      height: 14px;
+      background: repeating-linear-gradient(90deg, var(--azul-sl) 0 28px, var(--rojo-sl) 28px 56px);
+      border-bottom: 3px solid var(--tinta);
     }
-    textarea { min-height: 120px; resize: vertical; }
-    button, .boton {
-      display: inline-block; margin-top: 16px; padding: 12px 20px; border: 0; border-radius: 10px;
-      background: var(--acento); color: var(--acento-texto); font: inherit; font-weight: 600;
-      cursor: pointer; text-decoration: none;
+
+    .contenedor {
+      max-width: 760px; margin: 0 auto; padding: 0 14px 48px; display: grid; gap: 28px;
+      grid-template-columns: minmax(0, 1fr);
     }
-    button:disabled { opacity: .6; cursor: wait; }
-    .elegir {
-      display: block; border: 2px dashed var(--borde); border-radius: 12px; padding: 24px;
-      text-align: center; cursor: pointer; color: var(--suave); font-weight: 400;
+
+    /* ---------- Portada con la foto de Marcos ---------- */
+    .portada {
+      margin-top: 24px; position: relative; overflow: hidden;
+      border: 4px solid var(--celeste); box-shadow: 8px 8px 0 var(--tinta);
+      background: var(--caja);
     }
-    .elegir:hover { border-color: var(--acento); }
-    .elegir input { display: none; }
-    .aviso { margin: 12px 0 0; font-size: .95rem; }
+    .portada img { display: block; width: 100%; aspect-ratio: 4 / 3; max-height: 72vh; object-fit: cover; object-position: 55% 52%; }
+    @media (max-width: 600px) {
+      .portada img, .portada .sin-foto { aspect-ratio: 4 / 5; }
+    }
+    .portada .sin-foto {
+      aspect-ratio: 4 / 3; max-height: 72vh; display: grid; place-items: start center; text-align: center; padding: 36px 24px;
+      color: var(--suave); font-size: 1.1rem;
+      background: repeating-linear-gradient(45deg, var(--caja) 0 18px, var(--noche-2) 18px 36px);
+    }
+    .portada .sin-foto span { display: block; font-size: 3.5rem; margin-bottom: 8px; }
+    .portada .texto-portada {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 60px 20px 18px;
+      background: linear-gradient(transparent, rgba(6, 10, 28, .9));
+    }
+    .portada h1 {
+      margin: 0; font-family: "VT323", monospace; font-weight: 400; font-size: clamp(3.2rem, 12vw, 5.5rem); line-height: .9;
+      color: #fff; text-shadow: 4px 4px 0 var(--rojo-sl); letter-spacing: 2px;
+    }
+    .portada p { margin: 6px 0 0; font-size: 1.1rem; max-width: 520px; }
+    .portada p .corazon { color: var(--rojo-sl); }
+
+    /* ---------- Cajas ---------- */
+    .caja { background: var(--caja); border: 3px solid var(--caja-borde); box-shadow: 6px 6px 0 var(--tinta); }
+    .caja-titulo {
+      margin: 0; padding: 6px 14px; font-size: 1.6rem; line-height: 1.1; color: var(--tinta); background: var(--celeste);
+      display: flex; justify-content: space-between; align-items: center; gap: 8px; letter-spacing: 1px;
+    }
+    .caja-titulo.rojo { background: var(--rojo-sl); color: #fff; }
+    .caja-cuerpo { padding: 16px; }
+
+    /* ---------- Puntaje ---------- */
+    .marcador { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+    .contador { background: var(--campo); border: 2px solid var(--caja-borde); padding: 8px 4px; color: var(--suave); }
+    .contador b { display: block; font-family: "VT323", monospace; font-weight: 400; font-size: 2.4rem; line-height: 1; color: var(--celeste); }
+    .boton-drive {
+      display: block; margin-top: -8px; text-align: center; padding: 8px 10px; font-size: 1.35rem; line-height: 1.2;
+      background: var(--celeste); color: var(--tinta); border: 3px solid var(--tinta); box-shadow: 0 4px 0 var(--tinta); text-decoration: none;
+    }
+    .boton-drive:active { transform: translateY(4px); box-shadow: none; }
+
+    /* ---------- Cuadro para publicar ---------- */
+    .publicar .caja-cuerpo { display: grid; gap: 10px; }
+    .publicar input[type="text"], .publicar textarea {
+      width: 100%; padding: 12px; border: 2px solid var(--caja-borde); border-radius: 0; font: inherit;
+      background: var(--campo); color: var(--texto);
+    }
+    .publicar ::placeholder { color: var(--suave); opacity: 1; }
+    .publicar input[type="text"]:focus, .publicar textarea:focus { outline: 3px solid var(--celeste); outline-offset: 0; border-color: var(--celeste); }
+    .publicar textarea { min-height: 110px; resize: vertical; }
+    .acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; border-top: 2px dashed var(--caja-borde); padding-top: 12px; }
+    .adjuntar {
+      display: inline-flex; align-items: center; gap: 6px; cursor: pointer; padding: 8px 12px; font-weight: 800;
+      background: var(--campo); border: 3px solid var(--celeste); color: var(--celeste); box-shadow: 0 4px 0 var(--tinta);
+    }
+    .adjuntar:active { transform: translateY(4px); box-shadow: none; }
+    .adjuntar input { display: none; }
+    .boton-publicar {
+      cursor: pointer; padding: 6px 18px; border: 3px solid var(--tinta); border-radius: 0; background: var(--rojo-sl); color: #fff;
+      font-family: "VT323", monospace; font-size: 1.6rem; line-height: 1.1; box-shadow: 0 5px 0 var(--tinta);
+    }
+    .boton-publicar:active { transform: translateY(5px); box-shadow: none; }
+    .boton-publicar:disabled { opacity: .6; cursor: wait; }
+    .elegidos { font-size: .95rem; color: var(--suave); }
+    .restantes { margin-left: auto; font-family: "VT323", monospace; font-size: 1.5rem; color: var(--suave); }
+    .restantes.poco { color: #ffb347; }
+    .restantes.nada { color: var(--rojo-sl); }
+    .aviso { margin: 0; font-size: .95rem; }
+    .aviso:empty { display: none; }
     .aviso.ok { color: var(--ok); }
     .aviso.error { color: var(--error); }
-    .subidas { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+
+    /* Barra de energía (progreso de subida) */
+    .subidas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .subidas:empty { display: none; }
     .subidas li { font-size: .9rem; }
     .subidas .nombre { display: flex; justify-content: space-between; gap: 8px; }
     .subidas .nombre span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .barra { height: 6px; background: var(--borde); border-radius: 3px; overflow: hidden; margin-top: 4px; }
-    .barra div { height: 100%; width: 0; background: var(--acento); transition: width .2s; }
-    .titulo-seccion { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 16px; }
-    .titulo-seccion .boton { margin-top: 0; padding: 8px 14px; font-size: .9rem; }
-    .muro { display: grid; gap: 12px; }
-    @media (min-width: 760px) { .muro { grid-template-columns: 1fr 1fr; } }
-    .mensaje { border: 1px solid var(--borde); border-radius: 12px; padding: 16px; }
-    .mensaje p { margin: 0 0 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
-    .mensaje .firma { font-weight: 600; margin: 0; }
-    .mensaje .fecha { color: var(--suave); font-size: .85rem; font-weight: 400; }
-    .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
-    .item {
-      position: relative; aspect-ratio: 1; border: 0; padding: 0; margin: 0; border-radius: 10px;
-      overflow: hidden; background: var(--borde); cursor: pointer;
+    .energia { height: 14px; background: var(--tinta); border: 2px solid var(--caja-borde); margin-top: 4px; }
+    .energia div {
+      height: 100%; width: 0; transition: width .2s;
+      background: repeating-linear-gradient(90deg, var(--rojo-sl) 0 10px, var(--celeste) 10px 20px);
     }
-    .item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ---------- Muro ---------- */
+    .titulo-muro {
+      margin: 8px 0 -8px; text-align: center; font-family: "VT323", monospace; font-weight: 400; font-size: 2.2rem;
+      color: #fff; text-shadow: 3px 3px 0 var(--rojo-sl);
+    }
+    .muro { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+    .tuit { display: flex; gap: 12px; padding: 14px 16px; }
+    .avatar {
+      width: 46px; height: 46px; flex: none; display: grid; place-items: center; color: #fff;
+      font-family: "VT323", monospace; font-size: 1.8rem; border: 2px solid var(--tinta); text-shadow: 2px 2px 0 var(--tinta);
+      border-radius: 50%;
+    }
+    .tuit-cuerpo { flex: 1; min-width: 0; }
+    .tuit-cabecera { margin: 0 0 2px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tuit-cabecera b { font-weight: 800; color: var(--texto); }
+    .tuit-meta { color: var(--suave); font-weight: 600; font-size: .92rem; }
+    .post-texto { margin: 0 0 10px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1.05rem; line-height: 1.45; }
+    .tuit-nota { margin: 0 0 10px; color: var(--suave); }
+    .tuit-acciones { margin-top: 8px; }
+    .corazon-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 6px; margin-left: -6px;
+      background: none; border: 0; border-radius: 999px; cursor: pointer; color: var(--suave); font-weight: 700;
+    }
+    .corazon-btn:hover { background: rgba(224, 36, 47, .15); color: var(--rojo-sl); }
+    .corazon-btn .icono-corazon { font-size: 1.25rem; line-height: 1; }
+    .corazon-btn[aria-pressed="true"] { color: var(--rojo-sl); }
+    .corazon-btn.latido .icono-corazon { animation: latido .3s ease-out; }
+    @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.45); } 100% { transform: scale(1); } }
+
+    /* Fotos dentro de una publicación */
+    .medios {
+      display: grid; gap: 3px; grid-template-columns: repeat(2, 1fr);
+      border: 2px solid var(--caja-borde); border-radius: 16px; overflow: hidden;
+    }
+    .medios.uno { grid-template-columns: 1fr; }
+    .medios.uno .item { aspect-ratio: 4 / 3; }
+    .medios.tres .item:first-child { grid-column: span 2; aspect-ratio: 2 / 1; }
+    .item {
+      position: relative; aspect-ratio: 1; padding: 0; margin: 0; border: 0; border-radius: 0;
+      overflow: hidden; background: var(--campo); cursor: pointer; display: block; width: 100%;
+    }
+    .item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .2s; }
+    .item:hover img { transform: scale(1.04); }
     .item .icono {
       position: absolute; inset: 0; display: grid; place-items: center; font-size: 2.2rem;
-      color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.6); pointer-events: none;
+      color: #fff; text-shadow: 0 0 2px #000, 2px 2px 0 #000; pointer-events: none;
     }
-    .item .procesando { color: var(--suave); text-shadow: none; font-size: .85rem; text-align: center; padding: 8px; }
-    .vacio { color: var(--suave); margin: 0; }
-    .demo {
-      background: #fff6d6; border: 1px solid #f0d77a; color: #6b5300; border-radius: 12px;
-      padding: 12px 16px; font-size: .95rem;
+    .item .procesando { color: var(--suave); text-shadow: none; font-size: .8rem; text-align: center; padding: 8px; }
+    .item .mas {
+      position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.55); color: #fff;
+      font-family: "VT323", monospace; font-size: 2rem; pointer-events: none;
     }
+    .vacio { color: var(--suave); margin: 0; text-align: center; padding: 24px 14px; }
+
+    /* ---------- Minijuego ---------- */
+    #juego {
+      display: block; width: 100%; height: auto; aspect-ratio: 400 / 150; border: 3px solid var(--tinta);
+      image-rendering: pixelated; image-rendering: crisp-edges; cursor: pointer; touch-action: manipulation;
+      background: #bfe3ff;
+    }
+    #juego:focus-visible { outline: 3px solid var(--celeste); }
+    .ayuda-juego { margin: 10px 0 0; color: var(--suave); font-size: .9rem; text-align: center; }
+
+    /* ---------- Botón flotante de Drive ---------- */
+    .flotante {
+      position: fixed; right: 14px; bottom: 14px; z-index: 9;
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
+      font-family: "VT323", monospace; font-size: 1.4rem; line-height: 1.1; text-decoration: none;
+      background: var(--celeste); color: var(--tinta); border: 3px solid var(--tinta); box-shadow: 0 4px 0 var(--tinta);
+    }
+    .flotante:active { transform: translateY(4px); box-shadow: none; }
+    .flotante:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+    /* ---------- Pie ---------- */
+    footer { text-align: center; padding: 8px 16px 90px; color: var(--suave); font-size: 1.3rem; }
+
+    /* ---------- Cartel de logro ---------- */
+    .logro {
+      position: fixed; left: 50%; bottom: 24px; z-index: 20; transform: translate(-50%, 200%);
+      background: var(--tinta); color: #fff; border: 3px solid var(--celeste); padding: 10px 18px;
+      font-size: 1.3rem; line-height: 1.3; text-align: center; width: max-content; max-width: calc(100% - 32px);
+      transition: transform .35s cubic-bezier(.2, 1.6, .4, 1);
+    }
+    .logro.visible { transform: translate(-50%, 0); }
+    .logro b { color: var(--celeste); display: block; font-weight: 400; font-size: 1.6rem; }
+
+    /* ---------- Visor de fotos y videos ---------- */
     .visor {
-      position: fixed; inset: 0; background: rgba(10, 8, 20, .92); display: none;
-      flex-direction: column; align-items: center; justify-content: center; padding: 16px; z-index: 10;
+      position: fixed; inset: 0; background: rgba(7, 5, 26, .96); display: none;
+      flex-direction: column; align-items: center; justify-content: center; padding: 56px 12px 16px; z-index: 10;
     }
     .visor.abierto { display: flex; }
     .visor .contenido { width: 100%; max-width: 1000px; flex: 1; display: grid; place-items: center; min-height: 0; }
-    .visor img { max-width: 100%; max-height: 80vh; border-radius: 8px; }
-    .visor iframe { width: 100%; aspect-ratio: 16 / 9; max-height: 80vh; border: 0; border-radius: 8px; }
+    .visor img { max-width: 100%; max-height: 78vh; border: 3px solid #fff; }
+    .visor iframe { width: 100%; aspect-ratio: 16 / 9; max-height: 78vh; border: 3px solid #fff; }
     .visor .pie { color: #fff; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center; padding-top: 12px; }
-    .visor .pie a { color: #fff; }
-    .visor .cerrar {
-      position: absolute; top: 12px; right: 12px; margin: 0; background: rgba(255,255,255,.15);
-      font-size: 1.4rem; line-height: 1; padding: 10px 14px;
+    .visor .pie a { color: var(--celeste); }
+    .visor .control {
+      position: absolute; cursor: pointer; border: 3px solid var(--tinta); background: var(--rojo-sl); color: #fff;
+      font-family: "VT323", monospace; font-size: 1.6rem; line-height: 1; padding: 6px 12px; box-shadow: 0 4px 0 var(--tinta);
     }
+    .visor .cerrar { top: 10px; right: 10px; }
+    .visor .contenido { touch-action: pan-y; }
+    .visor .contenido.desde-derecha > * { animation: desde-derecha .22s ease-out; }
+    .visor .contenido.desde-izquierda > * { animation: desde-izquierda .22s ease-out; }
+    @keyframes desde-derecha { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+    @keyframes desde-izquierda { from { transform: translateX(-40px); opacity: 0; } to { transform: none; opacity: 1; } }
+    .visor .anterior { left: 10px; top: 50%; }
+    .visor .siguiente { right: 10px; top: 50%; }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
 </head>
 <body>
-  <header>
-    <h1>¡Felicitaciones, Marcos! 🎓</h1>
-    <p>Dejale un mensaje y compartí las fotos y videos de la fiesta.</p>
-  </header>
+  <div class="barra-top" aria-hidden="true"></div>
 
-  <main>
-    <div id="avisoDemo" class="demo" hidden>
-      Vista de prueba: la página todavía no está conectada con Google Drive, así que los mensajes y fotos de abajo son de ejemplo.
-    </div>
+  <div class="contenedor">
+    <header class="portada">
+      <img id="fotoMarcos" src="marcos.jpg" alt="Marcos">
+      <div id="sinFoto" class="sin-foto" hidden><div><span>📸</span>Acá va a ir la foto de Marcos</div></div>
+      <div class="texto-portada">
+        <h1>MARCOS</h1>
+        <p>Hoy celebramos que se recibió <span class="corazon">♥</span> Dejale un mensaje y compartí las fotos y videos de la fiesta.</p>
+      </div>
+    </header>
 
-    <div class="formularios">
-      <section>
-        <h2>💌 Dejale un mensaje</h2>
-        <p class="ayuda">Va a aparecer en el muro de felicitaciones.</p>
-        <form id="formMensaje">
-          <label for="nombreMensaje">Tu nombre</label>
-          <input type="text" id="nombreMensaje" maxlength="80" required autocomplete="name">
-          <label for="textoMensaje">Tu mensaje</label>
-          <textarea id="textoMensaje" maxlength="2000" required></textarea>
-          <button type="submit">Enviar mensaje</button>
-          <p id="avisoMensaje" class="aviso" role="status"></p>
-        </form>
-      </section>
-
-      <section>
-        <h2>📸 Subí fotos y videos</h2>
-        <p class="ayuda">Podés elegir varios a la vez, directo desde tu celular.</p>
-        <form id="formArchivos">
-          <label for="nombreArchivos">Tu nombre</label>
-          <input type="text" id="nombreArchivos" maxlength="80" required autocomplete="name">
-          <label class="elegir" for="archivos">
+    <form id="formPublicar" class="caja publicar">
+      <h2 class="caja-titulo rojo pixel">Escribile a Marcos</h2>
+      <div class="caja-cuerpo">
+        <input type="text" id="nombre" maxlength="80" placeholder="Tu nombre" aria-label="Tu nombre" autocomplete="name" required>
+        <textarea id="texto" maxlength="280" placeholder="¿Qué le querés decir?" aria-label="Tu mensaje"></textarea>
+        <div class="acciones">
+          <label class="adjuntar" for="archivos">
             <input type="file" id="archivos" accept="image/*,video/*" multiple>
-            <span id="textoElegir">Tocá acá para elegir fotos y videos</span>
+            📷 Foto / Video
           </label>
-          <button type="submit">Subir</button>
-          <p id="avisoArchivos" class="aviso" role="status"></p>
-          <ul id="listaSubidas" class="subidas"></ul>
-        </form>
-      </section>
-    </div>
-
-    <section>
-      <div class="titulo-seccion">
-        <h2>🖼️ Fotos y videos de la fiesta</h2>
-        <a id="linkCarpeta" class="boton" href="#" target="_blank" rel="noopener" hidden>Ver carpeta en Google Drive</a>
+          <span id="elegidos" class="elegidos"></span>
+          <span id="restantes" class="restantes" aria-live="polite">280</span>
+          <button type="submit" class="boton-publicar">Publicar ▶</button>
+        </div>
+        <p id="aviso" class="aviso" role="status"></p>
+        <ul id="listaSubidas" class="subidas"></ul>
       </div>
-      <div id="galeria" class="galeria"></div>
-      <p id="galeriaVacia" class="vacio" hidden>Todavía no hay fotos. ¡Subí la primera!</p>
+    </form>
+
+    <section class="caja">
+      <h2 class="caja-titulo rojo pixel">Minijuego: ¡Corré a recibirte!</h2>
+      <div class="caja-cuerpo">
+        <canvas id="juego" tabindex="0" aria-label="Juego: un graduado corre por Buenos Aires. Tocá o apretá espacio para saltar."></canvas>
+        <p class="ayuda-juego">Tocá el juego o apretá la barra espaciadora para saltar los libros y los conos.</p>
+      </div>
     </section>
 
-    <section>
-      <div class="titulo-seccion">
-        <h2>🎉 Muro de felicitaciones</h2>
+    <h2 class="titulo-muro">El muro de Marquitos</h2>
+    <div id="muro" class="muro"></div>
+    <div id="muroVacio" class="caja vacio" hidden>Todavía no hay publicaciones. ¡Sé el primero en escribirle a Marcos!</div>
+    <a id="linkCarpeta" class="boton-drive pixel" href="#" target="_blank" rel="noopener" hidden>Ver todas las fotos en Google Drive</a>
+
+    <section class="caja">
+      <h2 class="caja-titulo pixel">Puntaje de la fiesta</h2>
+      <div class="caja-cuerpo">
+        <div class="marcador">
+          <div class="contador"><b id="cuentaMensajes">0</b>mensajes</div>
+          <div class="contador"><b id="cuentaFotos">0</b>fotos</div>
+          <div class="contador"><b id="cuentaVideos">0</b>videos</div>
+        </div>
       </div>
-      <div id="muro" class="muro"></div>
-      <p id="muroVacio" class="vacio" hidden>Todavía no hay mensajes. ¡Escribí el primero!</p>
     </section>
-  </main>
+  </div>
+
+  <footer class="pixel">Hecho con ♥ para Marcos</footer>
+
+  <a id="linkFlotante" class="flotante" href="#" target="_blank" rel="noopener" hidden>📁 Fotos en Drive</a>
+
+  <div id="logro" class="logro pixel" role="status" aria-live="polite"></div>
 
   <div id="visor" class="visor" role="dialog" aria-modal="true" aria-label="Foto o video">
-    <button class="cerrar" id="cerrarVisor" aria-label="Cerrar">✕</button>
+    <button class="control cerrar" id="cerrarVisor" aria-label="Cerrar">✕</button>
+    <button class="control anterior" id="anterior" aria-label="Anterior">◀</button>
+    <button class="control siguiente" id="siguiente" aria-label="Siguiente">▶</button>
     <div class="contenido" id="contenidoVisor"></div>
     <div class="pie">
       <span id="autorVisor"></span>
@@ -171,11 +333,12 @@
   </div>
 
   <script>
-    // ⬇️ Acá va la dirección de la "aplicación web" de Google Apps Script.
+    // ⬇️ Dirección de la "aplicación web" de Google Apps Script.
     const API_URL = 'https://script.google.com/macros/s/AKfycbylnqgnPmQtSxUWF-snHzH1NpmemEkA-Y05oaf36XAw-M08B-IOB7u22OpJSb9SnKDqLQ/exec';
 
-    const CONECTADO = API_URL.startsWith('https://script.google.com/');
+    const MODO_DEMO = location.search.includes('demo');
     const TAMANIO_PARTE = 8 * 1024 * 1024; // múltiplo de 256 KB, como pide Drive
+    const MINUTOS_PARA_AGRUPAR = 15;
     const $ = (id) => document.getElementById(id);
 
     /* ---------- Comunicación con Google ---------- */
@@ -188,7 +351,7 @@
     }
 
     async function cargar() {
-      if (!CONECTADO) { mostrar(DEMO); return; }
+      if (MODO_DEMO) { mostrar(DEMO); return; }
       try {
         const respuesta = await fetch(API_URL);
         const json = await respuesta.json();
@@ -198,79 +361,253 @@
       }
     }
 
-    /* ---------- Mostrar mensajes y galería ---------- */
+    /* ---------- Ayudantes ---------- */
 
-    function formatearFecha(ms) {
+    const COLORES_AVATAR = ['#e0242f', '#1d2a6e', '#3f8fc4', '#b31b25', '#2e4a9e'];
+    function colorDe(nombre) {
+      let h = 0;
+      for (const c of nombre) h = (h * 31 + c.codePointAt(0)) >>> 0;
+      return COLORES_AVATAR[h % COLORES_AVATAR.length];
+    }
+
+    const relativo = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
+    function hace(ms) {
       if (!ms) return '';
-      return new Date(ms).toLocaleString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+      const seg = Math.round((ms - Date.now()) / 1000);
+      const abs = Math.abs(seg);
+      if (abs < 60) return 'recién';
+      if (abs < 3600) return relativo.format(Math.round(seg / 60), 'minute');
+      if (abs < 86400) return relativo.format(Math.round(seg / 3600), 'hour');
+      return new Date(ms).toLocaleString('es-AR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function urlMiniatura(id, ancho) {
+      return 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(id) + '&sz=w' + ancho;
+    }
+
+    function crearItem(a, ancho, alTocar) {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'item';
+      item.setAttribute('aria-label', (a.tipo === 'video' ? 'Video' : 'Foto') + (a.autor ? ' de ' + a.autor : ''));
+      if (a.id) {
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = '';
+        img.src = urlMiniatura(a.id, ancho);
+        img.onerror = () => {
+          img.remove();
+          const p = document.createElement('span');
+          p.className = 'icono procesando';
+          p.textContent = (a.tipo === 'video' ? '🎬' : '📷') + ' Procesando…';
+          item.prepend(p);
+        };
+        item.append(img);
+      } else {
+        const p = document.createElement('span');
+        p.className = 'icono procesando';
+        p.textContent = a.tipo === 'video' ? '🎬' : '📷';
+        item.append(p);
+      }
+      if (a.tipo === 'video') {
+        const play = document.createElement('span');
+        play.className = 'icono';
+        play.textContent = '▶';
+        item.append(play);
+      }
+      item.addEventListener('click', alTocar);
+      return item;
+    }
+
+    /* ---------- Armar el muro ---------- */
+
+    // Junta los mensajes y las fotos de una misma persona (subidos con
+    // pocos minutos de diferencia) en una sola publicación.
+    function armarPublicaciones(datos) {
+      const posts = datos.mensajes.map((m) => ({ clave: 'm' + (m.fecha || 0), autor: m.nombre, fecha: m.fecha || 0, texto: m.mensaje, medios: [] }));
+      const ventana = MINUTOS_PARA_AGRUPAR * 60000;
+      const archivos = [...datos.archivos].sort((a, b) => a.fecha - b.fecha);
+      for (const a of archivos) {
+        const autor = a.autor || 'Invitado';
+        let post = posts.find((p) => p.autor === autor && Math.abs(p.fecha - a.fecha) < ventana);
+        if (!post) {
+          post = { clave: 'a' + a.id, autor, fecha: a.fecha, texto: '', medios: [] };
+          posts.push(post);
+        }
+        post.medios.push(a);
+      }
+      return posts.sort((x, y) => y.fecha - x.fecha);
+    }
+
+    function describirMedios(medios) {
+      const fotos = medios.filter((m) => m.tipo === 'foto').length;
+      const videos = medios.length - fotos;
+      const partes = [];
+      if (fotos) partes.push(fotos === 1 ? 'una foto' : fotos + ' fotos');
+      if (videos) partes.push(videos === 1 ? 'un video' : videos + ' videos');
+      return partes.join(' y ');
+    }
+
+    // "@usuario" a partir del nombre: sin tildes, sin espacios, en minúscula
+    function usuarioDe(nombre) {
+      const limpio = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      return '@' + (limpio.slice(0, 15) || 'invitado');
+    }
+
+    function crearPost(p) {
+      const post = document.createElement('article');
+      post.className = 'caja post tuit';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar';
+      avatar.style.background = colorDe(p.autor);
+      avatar.textContent = (p.autor.trim()[0] || '?').toUpperCase();
+      avatar.setAttribute('aria-hidden', 'true');
+
+      const cuerpo = document.createElement('div');
+      cuerpo.className = 'tuit-cuerpo';
+
+      const cabecera = document.createElement('p');
+      cabecera.className = 'tuit-cabecera';
+      const nombre = document.createElement('b');
+      nombre.textContent = p.autor;
+      const usuario = document.createElement('span');
+      usuario.className = 'tuit-meta';
+      usuario.textContent = usuarioDe(p.autor) + ' · ' + hace(p.fecha);
+      cabecera.append(nombre, ' ', usuario);
+      cuerpo.append(cabecera);
+
+      if (p.texto) {
+        const texto = document.createElement('p');
+        texto.className = 'post-texto';
+        texto.textContent = p.texto;
+        cuerpo.append(texto);
+      } else if (p.medios.length) {
+        const nota = document.createElement('p');
+        nota.className = 'tuit-nota';
+        nota.textContent = 'Compartió ' + describirMedios(p.medios);
+        cuerpo.append(nota);
+      }
+
+      if (p.medios.length) {
+        const visibles = p.medios.slice(0, 4);
+        const grilla = document.createElement('div');
+        grilla.className = 'medios' + (visibles.length === 1 ? ' uno' : visibles.length === 3 ? ' tres' : '');
+        visibles.forEach((a, i) => {
+          const item = crearItem(a, visibles.length === 1 ? 900 : 500, () => abrirVisor(p.medios, i));
+          if (i === 3 && p.medios.length > 4) {
+            const mas = document.createElement('span');
+            mas.className = 'mas';
+            mas.textContent = '+' + (p.medios.length - 4);
+            item.append(mas);
+          }
+          grilla.append(item);
+        });
+        cuerpo.append(grilla);
+      }
+
+      cuerpo.append(crearCorazon(p.clave));
+      post.append(avatar, cuerpo);
+      return post;
     }
 
     function mostrar(datos) {
-      const muro = $('muro');
-      muro.replaceChildren();
-      for (const m of datos.mensajes) {
-        const tarjeta = document.createElement('article');
-        tarjeta.className = 'mensaje';
-        const texto = document.createElement('p');
-        texto.textContent = m.mensaje;
-        const firma = document.createElement('p');
-        firma.className = 'firma';
-        firma.textContent = '— ' + m.nombre + ' ';
-        const fecha = document.createElement('span');
-        fecha.className = 'fecha';
-        fecha.textContent = formatearFecha(m.fecha);
-        firma.append(fecha);
-        tarjeta.append(texto, firma);
-        muro.append(tarjeta);
-      }
-      $('muroVacio').hidden = datos.mensajes.length > 0;
+      reacciones = datos.reacciones || {};
+      const posts = armarPublicaciones(datos);
+      $('muro').replaceChildren(...posts.map(crearPost));
+      $('muroVacio').hidden = posts.length > 0;
 
-      const galeria = $('galeria');
-      galeria.replaceChildren();
-      for (const a of datos.archivos) {
-        const item = document.createElement('button');
-        item.type = 'button';
-        item.className = 'item';
-        item.setAttribute('aria-label', (a.tipo === 'video' ? 'Video' : 'Foto') + (a.autor ? ' de ' + a.autor : ''));
-        if (a.id) {
-          const img = document.createElement('img');
-          img.loading = 'lazy';
-          img.alt = '';
-          img.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(a.id) + '&sz=w400';
-          img.onerror = () => {
-            img.remove();
-            const p = document.createElement('span');
-            p.className = 'icono procesando';
-            p.textContent = (a.tipo === 'video' ? '🎬' : '📷') + ' Procesando…';
-            item.append(p);
-          };
-          item.append(img);
-          item.addEventListener('click', () => abrirVisor(a));
-        } else {
-          const p = document.createElement('span');
-          p.className = 'icono procesando';
-          p.textContent = a.tipo === 'video' ? '🎬' : '📷';
-          item.append(p);
-        }
-        if (a.tipo === 'video') {
-          const play = document.createElement('span');
-          play.className = 'icono';
-          play.textContent = '▶';
-          item.append(play);
-        }
-        galeria.append(item);
-      }
-      $('galeriaVacia').hidden = datos.archivos.length > 0;
+      const fotos = datos.archivos.filter((a) => a.tipo === 'foto').length;
+      $('cuentaMensajes').textContent = datos.mensajes.length;
+      $('cuentaFotos').textContent = fotos;
+      $('cuentaVideos').textContent = datos.archivos.length - fotos;
+
 
       if (datos.carpetaUrl) {
         $('linkCarpeta').href = datos.carpetaUrl;
         $('linkCarpeta').hidden = false;
+        $('linkFlotante').href = datos.carpetaUrl;
+        $('linkFlotante').hidden = false;
       }
+    }
+
+    /* ---------- Reacciones (corazones) ---------- */
+
+    let reacciones = {};
+    let misCorazones = new Set();
+    try { misCorazones = new Set(JSON.parse(localStorage.getItem('misCorazones') || '[]')); } catch (e) {}
+    function guardarMisCorazones() {
+      try { localStorage.setItem('misCorazones', JSON.stringify([...misCorazones])); } catch (e) {}
+    }
+
+    function pintarCorazon(boton, clave) {
+      const marcado = misCorazones.has(clave);
+      const cantidad = reacciones[clave] || 0;
+      boton.setAttribute('aria-pressed', marcado ? 'true' : 'false');
+      boton.setAttribute('aria-label', (marcado ? 'Quitar corazón' : 'Dar corazón') + ' (' + cantidad + ')');
+      boton.querySelector('.icono-corazon').textContent = marcado ? '♥' : '♡';
+      boton.querySelector('.cantidad').textContent = cantidad > 0 ? cantidad : '';
+    }
+
+    function crearCorazon(clave) {
+      const acciones = document.createElement('div');
+      acciones.className = 'tuit-acciones';
+      const boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'corazon-btn';
+      const icono = document.createElement('span');
+      icono.className = 'icono-corazon';
+      const cantidad = document.createElement('span');
+      cantidad.className = 'cantidad';
+      boton.append(icono, cantidad);
+      pintarCorazon(boton, clave);
+
+      boton.addEventListener('click', async () => {
+        const cambio = misCorazones.has(clave) ? -1 : 1;
+        // Se muestra al instante y después se confirma con Google
+        if (cambio > 0) misCorazones.add(clave); else misCorazones.delete(clave);
+        reacciones[clave] = Math.max(0, (reacciones[clave] || 0) + cambio);
+        guardarMisCorazones();
+        pintarCorazon(boton, clave);
+        if (cambio > 0) {
+          boton.classList.remove('latido');
+          void boton.offsetWidth;
+          boton.classList.add('latido');
+        }
+        if (MODO_DEMO) return;
+        boton.disabled = true;
+        try {
+          const r = await api({ accion: 'reaccionar', clave, cambio });
+          reacciones[clave] = r.cantidad;
+        } catch (err) {
+          if (cambio > 0) misCorazones.delete(clave); else misCorazones.add(clave);
+          reacciones[clave] = Math.max(0, (reacciones[clave] || 0) - cambio);
+          guardarMisCorazones();
+        } finally {
+          boton.disabled = false;
+          pintarCorazon(boton, clave);
+        }
+      });
+
+      acciones.append(boton);
+      return acciones;
     }
 
     /* ---------- Visor de fotos y videos ---------- */
 
-    function abrirVisor(a) {
+    let listaVisor = [];
+    let posVisor = 0;
+
+    function abrirVisor(lista, pos) {
+      listaVisor = lista.filter((a) => a.id);
+      if (!listaVisor.length) return;
+      posVisor = Math.max(0, listaVisor.indexOf(lista[pos]));
+      pintarVisor();
+      $('visor').classList.add('abierto');
+    }
+
+    function pintarVisor() {
+      const a = listaVisor[posVisor];
       const contenido = $('contenidoVisor');
       contenido.replaceChildren();
       const id = encodeURIComponent(a.id);
@@ -282,14 +619,40 @@
         contenido.append(iframe);
       } else {
         const img = document.createElement('img');
-        img.src = 'https://drive.google.com/thumbnail?id=' + id + '&sz=w2000';
+        img.src = urlMiniatura(a.id, 2000);
         img.alt = 'Foto' + (a.autor ? ' de ' + a.autor : '');
         contenido.append(img);
       }
-      $('autorVisor').textContent = a.autor ? 'Subido por ' + a.autor : '';
+      $('autorVisor').textContent = (a.autor ? 'Subido por ' + a.autor + ' · ' : '') + (posVisor + 1) + ' de ' + listaVisor.length;
       $('linkVisor').href = 'https://drive.google.com/file/d/' + id + '/view';
-      $('visor').classList.add('abierto');
+      $('anterior').hidden = listaVisor.length < 2;
+      $('siguiente').hidden = listaVisor.length < 2;
     }
+
+    function moverVisor(paso) {
+      if (listaVisor.length < 2) return;
+      posVisor = (posVisor + paso + listaVisor.length) % listaVisor.length;
+      pintarVisor();
+      const contenido = $('contenidoVisor');
+      contenido.classList.remove('desde-derecha', 'desde-izquierda');
+      void contenido.offsetWidth; // reinicia la animación
+      contenido.classList.add(paso > 0 ? 'desde-derecha' : 'desde-izquierda');
+    }
+
+    // Deslizar con el dedo para pasar de foto (como en la galería del celular)
+    let toqueX = null, toqueY = null;
+    $('contenidoVisor').addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { toqueX = null; return; }
+      toqueX = e.touches[0].clientX;
+      toqueY = e.touches[0].clientY;
+    }, { passive: true });
+    $('contenidoVisor').addEventListener('touchend', (e) => {
+      if (toqueX === null) return;
+      const dx = e.changedTouches[0].clientX - toqueX;
+      const dy = e.changedTouches[0].clientY - toqueY;
+      toqueX = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) moverVisor(dx < 0 ? 1 : -1);
+    }, { passive: true });
 
     function cerrarVisor() {
       $('visor').classList.remove('abierto');
@@ -297,54 +660,55 @@
     }
 
     $('cerrarVisor').addEventListener('click', cerrarVisor);
+    $('anterior').addEventListener('click', () => moverVisor(-1));
+    $('siguiente').addEventListener('click', () => moverVisor(1));
     $('visor').addEventListener('click', (e) => { if (e.target.id === 'visor') cerrarVisor(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarVisor(); });
+    document.addEventListener('keydown', (e) => {
+      if (!$('visor').classList.contains('abierto')) return;
+      if (e.key === 'Escape') cerrarVisor();
+      if (e.key === 'ArrowLeft') moverVisor(-1);
+      if (e.key === 'ArrowRight') moverVisor(1);
+    });
+
+    /* ---------- Cartel de logro ---------- */
+
+    let temporizadorLogro;
+    function mostrarLogro(titulo, texto) {
+      const logro = $('logro');
+      const b = document.createElement('b');
+      b.textContent = titulo;
+      logro.replaceChildren(b, texto);
+      logro.classList.add('visible');
+      clearTimeout(temporizadorLogro);
+      temporizadorLogro = setTimeout(() => logro.classList.remove('visible'), 4000);
+    }
+
+    /* ---------- Foto de portada ---------- */
+    $('fotoMarcos').addEventListener('error', () => { $('fotoMarcos').hidden = true; $('sinFoto').hidden = false; });
+    if ($('fotoMarcos').complete && !$('fotoMarcos').naturalWidth) { $('fotoMarcos').hidden = true; $('sinFoto').hidden = false; }
 
     /* ---------- Recordar el nombre ---------- */
 
-    function recordarNombre(nombre) {
-      try { localStorage.setItem('nombre', nombre); } catch (e) {}
-      for (const id of ['nombreMensaje', 'nombreArchivos']) if (!$(id).value) $(id).value = nombre;
-    }
     try {
       const guardado = localStorage.getItem('nombre');
-      if (guardado) { $('nombreMensaje').value = guardado; $('nombreArchivos').value = guardado; }
+      if (guardado) $('nombre').value = guardado;
     } catch (e) {}
-
-    /* ---------- Enviar mensaje ---------- */
-
-    $('formMensaje').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const aviso = $('avisoMensaje');
-      const boton = e.target.querySelector('button');
-      const nombre = $('nombreMensaje').value.trim();
-      const mensaje = $('textoMensaje').value.trim();
-      if (!nombre || !mensaje) return;
-      if (!CONECTADO) { aviso.className = 'aviso error'; aviso.textContent = 'La página todavía no está conectada con Google Drive.'; return; }
-      boton.disabled = true;
-      aviso.className = 'aviso';
-      aviso.textContent = 'Enviando…';
-      try {
-        await api({ accion: 'mensaje', nombre, mensaje });
-        recordarNombre(nombre);
-        $('textoMensaje').value = '';
-        aviso.className = 'aviso ok';
-        aviso.textContent = '¡Gracias! Tu mensaje ya está en el muro.';
-        cargar();
-      } catch (err) {
-        aviso.className = 'aviso error';
-        aviso.textContent = 'No se pudo enviar: ' + err.message;
-      } finally {
-        boton.disabled = false;
-      }
-    });
 
     /* ---------- Subir fotos y videos ---------- */
 
+    // Contador de caracteres, como en Twitter
+    const LIMITE = 280;
+    function actualizarRestantes() {
+      const quedan = LIMITE - $('texto').value.length;
+      const r = $('restantes');
+      r.textContent = quedan;
+      r.className = 'restantes' + (quedan <= 0 ? ' nada' : quedan <= 20 ? ' poco' : '');
+    }
+    $('texto').addEventListener('input', actualizarRestantes);
+
     $('archivos').addEventListener('change', () => {
       const n = $('archivos').files.length;
-      $('textoElegir').textContent = n === 0 ? 'Tocá acá para elegir fotos y videos'
-        : n === 1 ? '1 archivo elegido' : n + ' archivos elegidos';
+      $('elegidos').textContent = n === 0 ? '' : n === 1 ? '1 archivo elegido' : n + ' archivos elegidos';
     });
 
     const TIPOS_POR_EXTENSION = {
@@ -414,25 +778,10 @@
       if (id) await api({ accion: 'terminarSubida', id });
     }
 
-    $('formArchivos').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const aviso = $('avisoArchivos');
-      const boton = e.target.querySelector('button');
-      const nombre = $('nombreArchivos').value.trim();
-      const archivos = Array.from($('archivos').files);
-      if (!nombre) return;
-      if (archivos.length === 0) { aviso.className = 'aviso error'; aviso.textContent = 'Primero elegí al menos una foto o video.'; return; }
-      if (!CONECTADO) { aviso.className = 'aviso error'; aviso.textContent = 'La página todavía no está conectada con Google Drive.'; return; }
-
-      recordarNombre(nombre);
-      boton.disabled = true;
-      aviso.className = 'aviso';
-      aviso.textContent = 'Subiendo… no cierres la página hasta que termine.';
+    function crearFilasDeSubida(archivos) {
       const lista = $('listaSubidas');
       lista.replaceChildren();
-      let errores = 0;
-
-      for (const archivo of archivos) {
+      return archivos.map((archivo) => {
         const li = document.createElement('li');
         const fila = document.createElement('div');
         fila.className = 'nombre';
@@ -442,62 +791,475 @@
         estado.textContent = 'En espera';
         fila.append(titulo, estado);
         const barra = document.createElement('div');
-        barra.className = 'barra';
+        barra.className = 'energia';
         const relleno = document.createElement('div');
         barra.append(relleno);
         li.append(fila, barra);
         lista.append(li);
-      }
+        return { estado, relleno };
+      });
+    }
 
-      for (let i = 0; i < archivos.length; i++) {
-        const li = lista.children[i];
-        const estado = li.querySelector('.nombre span:last-child');
-        const relleno = li.querySelector('.barra div');
-        estado.textContent = '0%';
+    /* ---------- Publicar ---------- */
+
+    $('formPublicar').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const aviso = $('aviso');
+      const boton = e.target.querySelector('.boton-publicar');
+      const nombre = $('nombre').value.trim();
+      const texto = $('texto').value.trim();
+      const archivos = Array.from($('archivos').files);
+
+      if (!nombre) { $('nombre').focus(); return; }
+      if (!texto && archivos.length === 0) {
+        aviso.className = 'aviso error';
+        aviso.textContent = 'Escribí un mensaje o elegí fotos y videos para publicar.';
+        return;
+      }
+      if (MODO_DEMO) { mostrarLogro('¡MODO PRUEBA!', 'En la vista de prueba no se publica nada.'); return; }
+
+      try { localStorage.setItem('nombre', nombre); } catch (err) {}
+      boton.disabled = true;
+      aviso.className = 'aviso';
+      aviso.textContent = archivos.length ? 'Publicando… no cierres la página hasta que termine.' : 'Publicando…';
+      let fallos = 0;
+
+      if (texto) {
         try {
-          await subirArchivo(archivos[i], nombre, (p) => {
-            relleno.style.width = Math.round(p * 100) + '%';
-            estado.textContent = Math.round(p * 100) + '%';
-          });
-          relleno.style.width = '100%';
-          estado.textContent = '✓ Listo';
+          await api({ accion: 'mensaje', nombre, mensaje: texto });
+          $('texto').value = '';
+          actualizarRestantes();
         } catch (err) {
-          errores++;
-          relleno.style.background = 'var(--error)';
-          estado.textContent = '✗ ' + err.message;
+          fallos++;
+          aviso.className = 'aviso error';
+          aviso.textContent = 'No se pudo publicar el mensaje: ' + err.message;
         }
       }
 
+      if (archivos.length) {
+        const filas = crearFilasDeSubida(archivos);
+        for (let i = 0; i < archivos.length; i++) {
+          const { estado, relleno } = filas[i];
+          estado.textContent = '0%';
+          try {
+            await subirArchivo(archivos[i], nombre, (p) => {
+              relleno.style.width = Math.round(p * 100) + '%';
+              estado.textContent = p >= 1 ? 'Guardando en Drive…' : Math.round(p * 100) + '%';
+            });
+            relleno.style.width = '100%';
+            estado.textContent = '✓ Listo';
+          } catch (err) {
+            fallos++;
+            relleno.style.background = 'var(--error)';
+            estado.textContent = '✗ ' + err.message;
+          }
+        }
+        $('archivos').value = '';
+        $('elegidos').textContent = '';
+      }
+
       boton.disabled = false;
-      $('archivos').value = '';
-      $('textoElegir').textContent = 'Tocá acá para elegir fotos y videos';
-      if (errores === 0) {
-        aviso.className = 'aviso ok';
-        aviso.textContent = '¡Gracias! Ya está todo subido.';
-      } else {
+      if (fallos === 0) {
+        aviso.textContent = '';
+        $('listaSubidas').replaceChildren();
+        mostrarLogro('¡LOGRO DESBLOQUEADO!', archivos.length ? '+' + archivos.length * 100 + ' puntos para la fiesta' : '+100 puntos para la fiesta');
+      } else if (aviso.className !== 'aviso error') {
         aviso.className = 'aviso error';
-        aviso.textContent = errores === archivos.length ? 'No se pudo subir. Probá de nuevo.' : 'Algunos archivos no se pudieron subir. Probá de nuevo con esos.';
+        aviso.textContent = 'Algunas cosas no se pudieron subir. Probá de nuevo con esas.';
       }
       cargar();
     });
 
-    /* ---------- Datos de ejemplo (solo sin conexión) ---------- */
+    /* ---------- Datos de ejemplo (abrir con ?demo) ---------- */
 
+    const ahora = Date.now();
     const DEMO = {
+      carpetaUrl: '#',
       mensajes: [
-        { nombre: 'Mamá', mensaje: '¡Estamos tan orgullosos de vos! Te lo merecés todo. 💙', fecha: Date.now() - 3600000 },
-        { nombre: 'Juli', mensaje: '¡Por fin recibido! Ahora a festejar como corresponde 🎉', fecha: Date.now() - 7200000 },
-        { nombre: 'Los chicos del fútbol', mensaje: 'Felicitaciones crack, el próximo asado lo pagás vos.', fecha: Date.now() - 9000000 },
+        { nombre: 'Mamá', mensaje: '¡Estamos tan orgullosos de vos! Te lo merecés todo. 💙', fecha: ahora - 5 * 60000 },
+        { nombre: 'Juli', mensaje: '¡Por fin recibido! Ahora a festejar como corresponde 🎉', fecha: ahora - 50 * 60000 },
+        { nombre: 'Los chicos del fútbol', mensaje: 'Felicitaciones crack, el próximo asado lo pagás vos.', fecha: ahora - 3 * 3600000 },
       ],
       archivos: [
-        { id: null, tipo: 'foto' }, { id: null, tipo: 'foto' }, { id: null, tipo: 'video' },
-        { id: null, tipo: 'foto' }, { id: null, tipo: 'foto' },
+        { id: null, tipo: 'foto', autor: 'Juli', fecha: ahora - 49 * 60000 },
+        { id: null, tipo: 'foto', autor: 'Juli', fecha: ahora - 48 * 60000 },
+        { id: null, tipo: 'video', autor: 'Juli', fecha: ahora - 47 * 60000 },
+        { id: null, tipo: 'foto', autor: 'Tío Carlos', fecha: ahora - 2 * 3600000 },
       ],
     };
 
-    $('avisoDemo').hidden = CONECTADO;
     cargar();
-    if (CONECTADO) setInterval(cargar, 60000);
+    // Actualiza el muro cada 2 minutos, solo si la página está a la vista.
+    if (!MODO_DEMO) setInterval(() => { if (!document.hidden) cargar(); }, 120000);
+  </script>
+
+  <script>
+    /* =========================================================
+       Minijuego: el graduado corre por Buenos Aires
+       ========================================================= */
+    (() => {
+      const lienzo = document.getElementById('juego');
+      const ctx = lienzo.getContext('2d');
+      const W = 400, H = 150, PISO = 126, P = 2; // P = tamaño de cada "píxel"
+      lienzo.width = W;
+      lienzo.height = H;
+
+      const COLORES = {
+        K: '#111111', Y: '#ffd60a', S: '#f1c27d', G: '#1e3fae', W: '#ffffff', R: '#e8262d',
+        O: '#ff7a00', B: '#22b14c', N: '#8e44ad', D: '#455a64', L: '#9e9e9e',
+      };
+
+      // Cada letra es un color; "." es transparente.
+      const CUERPO = [
+        '...KKKKKK...',
+        'KKKKKKKKKKKK',
+        '...KKKKK.Y..',
+        '...SSSSS.Y..',
+        '...SKSSK.Y..',
+        '...SSSSS....',
+        '....SSS.....',
+        '..GGWWWGG...',
+        '.GGGGWGGGG..',
+        'SGGGGGGGGGS.',
+        '.GGGGGGGGGWW',
+        '..GGGGGGG.WW',
+        '..GGGGGGG...',
+        '..GGGGGGG...',
+        '..GGGGGGG...',
+      ];
+      const PIERNAS_A = ['...GG..GG...', '..GG....GG..', '.KK......KK.'];
+      const PIERNAS_B = ['....GGGG....', '....GGGG....', '....KKKK....'];
+      const PIERNAS_SALTO = ['...GGGGG....', '...GG.GG....', '...KK.KK....'];
+
+      const LIBROS = [
+        'RRRRRRR.',
+        'RWWWWWR.',
+        '.BBBBBBB',
+        '.BWWWWWB',
+        'NNNNNNN.',
+        'NWWWWWN.',
+        '..OOOOOO',
+        '..OWWWWO',
+        'RRRRRRRR',
+        'RWWWWWWR',
+      ];
+      const CONO = [
+        '...OO...',
+        '...OO...',
+        '..OWWO..',
+        '..OWWO..',
+        '..OOOO..',
+        '.OOOOOO.',
+        '.WWWWWW.',
+        '.OOOOOO.',
+        'OOOOOOOO',
+        'DDDDDDDD',
+      ];
+
+      function hornear(filas) {
+        const c = document.createElement('canvas');
+        c.width = filas[0].length * P;
+        c.height = filas.length * P;
+        const x = c.getContext('2d');
+        filas.forEach((fila, r) => [...fila].forEach((ch, col) => {
+          if (ch === '.') return;
+          x.fillStyle = COLORES[ch];
+          x.fillRect(col * P, r * P, P, P);
+        }));
+        return c;
+      }
+
+      const SPRITES = {
+        correrA: hornear([...CUERPO, ...PIERNAS_A]),
+        correrB: hornear([...CUERPO, ...PIERNAS_B]),
+        salto: hornear([...CUERPO, ...PIERNAS_SALTO]),
+        libros: hornear(LIBROS),
+        cono: hornear(CONO),
+      };
+
+      /* ---------- Fondo: ciudad de Buenos Aires ---------- */
+
+      const LETRAS = {
+        U: ['101', '101', '101', '101', '111'],
+        A: ['010', '101', '111', '101', '101'],
+        D: ['110', '101', '101', '101', '110'],
+        E: ['111', '100', '110', '100', '111'],
+      };
+
+      function crearCiudad() {
+        const ancho = W * 2, alto = PISO;
+        const c = document.createElement('canvas');
+        c.width = ancho;
+        c.height = alto;
+        const x = c.getContext('2d');
+        let semilla = 7;
+        const azar = () => (semilla = (semilla * 9301 + 49297) % 233280) / 233280;
+
+        // Edificios lejanos (dejando lugar libre para los monumentos)
+        const LIBRES = [[130, 225], [300, 430], [512, 600]];
+        let pos = 0;
+        while (pos < ancho - 30) {
+          const an = 18 + Math.floor(azar() * 5) * 6;
+          const choca = LIBRES.find(([a, b]) => pos < b && pos + an > a);
+          if (choca) { pos = choca[1] + 2; continue; }
+          const al = 30 + Math.floor(azar() * 8) * 6;
+          x.fillStyle = azar() > .5 ? '#8fb8de' : '#7aa7d1';
+          x.fillRect(pos, alto - al, an, al);
+          x.fillStyle = '#d6ecff';
+          for (let wy = alto - al + 4; wy < alto - 6; wy += 6) {
+            for (let wx = pos + 3; wx < pos + an - 3; wx += 5) {
+              if (azar() > .45) x.fillRect(wx, wy, 2, 3);
+            }
+          }
+          pos += an + 2 + Math.floor(azar() * 4) * 2;
+        }
+
+        // Plaza verde de la 9 de Julio
+        x.fillStyle = '#5cae4f';
+        x.fillRect(140, alto - 4, 76, 4);
+
+        // Obelisco: alto, angostándose hacia arriba, con punta piramidal
+        const oc = 178;                 // centro
+        const base = alto - 4, cima = 22;  // donde termina el fuste
+        for (let y = cima; y < base; y++) {
+          const t = (y - cima) / (base - cima);         // 0 arriba, 1 abajo
+          const media = Math.round(4 + t * 3);          // medio ancho: 4 → 7
+          x.fillStyle = '#4a5866';                       // contorno
+          x.fillRect(oc - media - 1, y, media * 2 + 2, 1);
+          x.fillStyle = '#fbfaf5';                       // lado iluminado
+          x.fillRect(oc - media, y, media, 1);
+          x.fillStyle = '#d8d2c2';                       // lado en sombra
+          x.fillRect(oc, y, media, 1);
+        }
+        for (let i = 0; i < 9; i++) {                    // punta
+          const media = Math.max(0, 4 - Math.floor(i / 2));
+          const y = cima - 1 - i;
+          x.fillStyle = '#4a5866';
+          x.fillRect(oc - media - 1, y, media * 2 + 2, 1);
+          x.fillStyle = '#fbfaf5';
+          x.fillRect(oc - media, y, media, 1);
+          x.fillStyle = '#d8d2c2';
+          x.fillRect(oc, y, media, 1);
+        }
+        x.fillStyle = '#4a5866';                         // ventanita de arriba
+        x.fillRect(oc - 1, cima + 6, 2, 3);
+
+        // Casa Rosada con la bandera argentina
+        const cr = 312, crAncho = 106, crAlto = 40;
+        x.fillStyle = '#e59aa5';
+        x.fillRect(cr, alto - crAlto, crAncho, crAlto);
+        x.fillStyle = '#c97884';
+        x.fillRect(cr, alto - crAlto, crAncho, 3);
+        x.fillRect(cr, alto - 14, crAncho, 2);
+        const centro = cr + crAncho / 2;
+        x.fillStyle = '#efaab3';
+        x.fillRect(centro - 16, alto - crAlto - 12, 32, 12);   // cuerpo central más alto
+        x.fillStyle = '#c97884';
+        x.fillRect(centro - 18, alto - crAlto - 14, 36, 3);
+        x.fillStyle = '#fff1f3';
+        for (let wx = cr + 5; wx < cr + crAncho - 5; wx += 8) {
+          if (Math.abs(wx + 1 - centro) < 10) continue;
+          x.fillRect(wx, alto - 32, 3, 6);
+          x.fillRect(wx, alto - 22, 3, 6);
+        }
+        for (let wx = centro - 12; wx <= centro + 9; wx += 7) x.fillRect(wx, alto - crAlto - 8, 3, 5);
+        x.fillStyle = '#7a3f48';                                 // arco de la puerta
+        x.fillRect(centro - 5, alto - 18, 10, 18);
+        x.fillRect(centro - 3, alto - 20, 6, 2);
+        x.fillStyle = '#333';                                    // mástil
+        x.fillRect(centro, alto - crAlto - 30, 1, 16);
+        x.fillStyle = '#74acdf';                                 // bandera
+        x.fillRect(centro + 1, alto - crAlto - 30, 12, 3);
+        x.fillRect(centro + 1, alto - crAlto - 24, 12, 3);
+        x.fillStyle = '#ffffff';
+        x.fillRect(centro + 1, alto - crAlto - 27, 12, 3);
+        x.fillStyle = '#f6b40e';
+        x.fillRect(centro + 6, alto - crAlto - 27, 2, 3);
+
+        // Edificio UADE
+        const ux = 520, ua = 74, ual = 78;
+        x.fillStyle = '#2f3e55';
+        x.fillRect(ux, alto - ual, ua, ual);
+        x.fillStyle = '#9fd0ff';
+        for (let wy = alto - ual + 20; wy < alto - 8; wy += 8) {
+          for (let wx = ux + 5; wx < ux + ua - 5; wx += 8) x.fillRect(wx, wy, 5, 5);
+        }
+        x.fillStyle = '#1e3fae';
+        x.fillRect(ux + 8, alto - ual + 4, ua - 16, 14);
+        x.fillStyle = '#ffffff';
+        let lx = ux + 8 + Math.floor((ua - 16 - (4 * 6 + 3 * 2)) / 2);
+        for (const letra of 'UADE') {
+          LETRAS[letra].forEach((fila, r) => [...fila].forEach((v, col) => {
+            if (v === '1') x.fillRect(lx + col * 2, alto - ual + 6 + r * 2, 2, 2);
+          }));
+          lx += 8;
+        }
+        x.fillStyle = '#2f3e55';
+        x.fillRect(ux + ua / 2 - 6, alto - 14, 12, 14);
+        x.fillStyle = '#ffd60a';
+        x.fillRect(ux + ua / 2 - 5, alto - 13, 10, 13);
+        return c;
+      }
+
+      const CIUDAD = crearCiudad();
+      const NUBES = [[40, 22], [150, 12], [260, 28], [350, 16]];
+
+      /* ---------- Estado del juego ---------- */
+
+      let estado = 'inicio';
+      let jugadorY = 0, velY = 0;
+      let velocidad, puntos, obstaculos, distanciaProx, fondoX = 0, sueloX = 0, tiempoPaso = 0, cartel = null;
+      let record = 0;
+      try { record = Number(localStorage.getItem('recordJuego')) || 0; } catch (e) {}
+      const JX = 36;
+      const GRAVEDAD = 1500, SALTO = 470;
+
+      function reiniciar() {
+        jugadorY = 0; velY = 0; velocidad = 170; puntos = 0; obstaculos = []; distanciaProx = 260; cartel = null;
+      }
+      reiniciar();
+
+      function saltar() {
+        if (jugadorY === 0) velY = SALTO;
+      }
+
+      function accion() {
+        if (estado === 'jugando') { saltar(); return; }
+        reiniciar();
+        estado = 'jugando';
+        ultimo = performance.now();
+        requestAnimationFrame(bucle);
+        saltar();
+      }
+
+      /* ---------- Dibujo ---------- */
+
+      function texto(t, x, y, tam, color, alinear) {
+        ctx.font = tam + 'px "Press Start 2P", monospace';
+        ctx.textAlign = alinear || 'left';
+        ctx.fillStyle = '#111';
+        ctx.fillText(t, x + 1, y + 1);
+        ctx.fillStyle = color;
+        ctx.fillText(t, x, y);
+      }
+
+      function dibujar() {
+        // Cielo
+        ctx.fillStyle = '#bfe3ff';
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#ffffff';
+        for (const [nx, ny] of NUBES) {
+          const x = ((nx - fondoX * 0.3) % (W + 40) + W + 40) % (W + 40) - 40;
+          ctx.fillRect(x, ny, 24, 6);
+          ctx.fillRect(x + 6, ny - 4, 12, 4);
+        }
+        // Ciudad
+        const cx = -((fondoX * 0.5) % CIUDAD.width);
+        ctx.drawImage(CIUDAD, cx, 0);
+        ctx.drawImage(CIUDAD, cx + CIUDAD.width, 0);
+        // Vereda porteña
+        ctx.fillStyle = '#555';
+        ctx.fillRect(0, PISO, W, 3);
+        ctx.fillStyle = '#c9c4b8';
+        ctx.fillRect(0, PISO + 3, W, H - PISO - 3);
+        ctx.fillStyle = '#a9a396';
+        const desplazamiento = sueloX % 16;
+        for (let x = -desplazamiento; x < W; x += 16) ctx.fillRect(x, PISO + 3, 1, H - PISO);
+        ctx.fillRect(0, PISO + 12, W, 1);
+        // Obstáculos
+        for (const o of obstaculos) {
+          ctx.drawImage(o.sprite, o.x, PISO - o.sprite.height);
+          if (o.doble) ctx.drawImage(o.sprite, o.x + o.sprite.width, PISO - o.sprite.height);
+        }
+        // Graduado
+        const sprite = jugadorY > 0 ? SPRITES.salto : (Math.floor(tiempoPaso * 10) % 2 ? SPRITES.correrA : SPRITES.correrB);
+        ctx.drawImage(sprite, JX, PISO - sprite.height - Math.round(jugadorY));
+        // Marcador
+        texto('CREDITOS ' + String(Math.floor(puntos)).padStart(5, '0'), W - 8, 16, 8, '#1e3fae', 'right');
+        if (record) texto('RECORD ' + String(record).padStart(5, '0'), W - 8, 28, 8, '#5a6b7a', 'right');
+        if (cartel) texto(cartel.texto, W / 2, 56, 10, '#ff7a00', 'center');
+
+        if (estado === 'inicio') {
+          texto('TOCA PARA EMPEZAR', W / 2, 60, 10, '#e8262d', 'center');
+          texto('SALTA LOS LIBROS Y LOS CONOS', W / 2, 78, 7, '#111', 'center');
+        } else if (estado === 'fin') {
+          texto('DESAPROBADO!', W / 2, 56, 14, '#e8262d', 'center');
+          texto('TOCA PARA RENDIR DE NUEVO', W / 2, 76, 8, '#111', 'center');
+        }
+      }
+
+      /* ---------- Bucle principal ---------- */
+
+      let ultimo = 0;
+      function bucle(ahora) {
+        if (estado !== 'jugando') return;
+        const dt = Math.min((ahora - ultimo) / 1000, 0.05);
+        ultimo = ahora;
+
+        velocidad = Math.min(velocidad + 7 * dt, 440);
+        const avance = velocidad * dt;
+        fondoX += avance;
+        sueloX += avance;
+        tiempoPaso += dt;
+
+        const antes = Math.floor(puntos / 500);
+        puntos += avance / 8;
+        if (Math.floor(puntos / 500) > antes) cartel = { texto: 'MATERIA APROBADA!', hasta: ahora + 1300 };
+        if (cartel && ahora > cartel.hasta) cartel = null;
+
+        // Salto
+        if (jugadorY > 0 || velY > 0) {
+          velY -= GRAVEDAD * dt;
+          jugadorY = Math.max(0, jugadorY + velY * dt);
+          if (jugadorY === 0) velY = 0;
+        }
+
+        // Obstáculos nuevos
+        distanciaProx -= avance;
+        if (distanciaProx <= 0) {
+          const sprite = Math.random() < 0.5 ? SPRITES.libros : SPRITES.cono;
+          obstaculos.push({ x: W + 4, sprite, doble: velocidad > 240 && Math.random() < 0.3 });
+          distanciaProx = 170 + Math.random() * 190 + velocidad * 0.35;
+        }
+        for (const o of obstaculos) o.x -= avance;
+        obstaculos = obstaculos.filter((o) => o.x > -40);
+
+        // Choque (con un poquito de margen para ser buenos)
+        const jx1 = JX + 6, jx2 = JX + 18, jy2 = PISO - jugadorY, jy1 = jy2 - (SPRITES.correrA.height - 6);
+        for (const o of obstaculos) {
+          const ancho = o.sprite.width * (o.doble ? 2 : 1);
+          const ox1 = o.x + 3, ox2 = o.x + ancho - 3, oy1 = PISO - o.sprite.height + 3;
+          if (jx1 < ox2 && jx2 > ox1 && jy2 > oy1 && jy1 < PISO) {
+            estado = 'fin';
+            const final = Math.floor(puntos);
+            if (final > record) {
+              record = final;
+              try { localStorage.setItem('recordJuego', String(record)); } catch (e) {}
+            }
+          }
+        }
+
+        dibujar();
+        if (estado === 'jugando') requestAnimationFrame(bucle);
+      }
+
+      /* ---------- Controles ---------- */
+
+      lienzo.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        lienzo.focus({ preventScroll: true });
+        accion();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.code !== 'Space' && e.code !== 'ArrowUp') return;
+        if (estado !== 'jugando' && document.activeElement !== lienzo) return;
+        e.preventDefault();
+        accion();
+      });
+
+      const fuente = document.fonts && document.fonts.load ? document.fonts.load('8px "Press Start 2P"') : Promise.resolve();
+      fuente.catch(() => {}).then(dibujar);
+    })();
   </script>
 </body>
 </html>
